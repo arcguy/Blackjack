@@ -21,7 +21,7 @@ namespace cards
         double money = 100;
         Random r = new Random();
         double bet = 0;
-        int round = 1;
+        int round = 0;
 
         public Form1()
         {
@@ -47,16 +47,35 @@ namespace cards
             }
 
             Initialize();
-            labelMoney.Text = "Money: $" + money.ToString();
+            labelMoney.Text = "Money: $" + money.ToString();            
         }
 
+        /// <summary>
+        /// Draws a card for the player. If they reach a score of 21 or greater the CheckWin method is invoked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonHit_Click(object sender, EventArgs e)
         {
             Draw("player", 1);
             if (playerScore >= 21)
+            {
+                while (dealerScore < 17)
+                {
+                    Draw("dealer", 1);
+                    Thread.Sleep(r.Next(150, 1000));
+                    listBoxDealer.Update();
+                    labelDealerScore.Update();
+                }
                 CheckWin();
+            }
         }
 
+        /// <summary>
+        /// Causes the dealer to begin drawing cards until they have a score of 17 or greater. They must draw at least one card.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonStand_Click(object sender, EventArgs e)
         {
             Draw("dealer", 1);
@@ -64,20 +83,27 @@ namespace cards
             while (dealerScore < 17)
             {
                 Draw("dealer", 1);
-                Thread.Sleep(r.Next(100, 1000));
+                Thread.Sleep(r.Next(150, 1000));
                 listBoxDealer.Update();
                 labelDealerScore.Update();
             }
             CheckWin();
         }
 
+        /// <summary>
+        /// begins the next round
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonRestart_Click(object sender, EventArgs e)
         {
             Initialize();
-            bet = 0;
-            round++;
+            
         }
 
+        /// <summary>
+        /// enables and disables specific buttons for the start of the round. Resets the deck and scores, updates displays.
+        /// </summary>
         private void Initialize()
         {
             //set buttons to be enabled or not
@@ -93,8 +119,10 @@ namespace cards
             listBoxPlayer.Items.Clear();
             labelDealerScore.ResetText();
             labelPlayerScore.ResetText();
-            labelDisplay.Text = "";
-            
+            labelDisplay.Text = "Confirm bet to continue";
+            bet = 0;
+            round++;
+
             //create the deck
             Deck.Clear();
             //for (int i = 1; i < 14; i++)
@@ -156,6 +184,9 @@ namespace cards
             }          
         }
 
+        /// <summary>
+        /// Checks if the player has blackjack and then either wins, loses or draws with the dealer. Money is updated based on win state.
+        /// </summary>
         private void CheckWin()
         {
             string winstate = "";
@@ -181,46 +212,58 @@ namespace cards
                     else if (playerScore == dealerScore)
                         winstate = "Draw";
                     else
-                        winstate = "Loss";
+                        winstate = "Bust";
                 }
                 else
                     winstate = "Win";
             }
             else
-                winstate = "Loss";
+                winstate = "Bust";
 
-            labelDisplay.Text = winstate;
             if (winstate == "Draw")
-                money += bet;
+            {
+                //money += bet;
+                UpdateMoney(bet);
+                labelDisplay.Text = winstate + " Bet refunded";
+            }
             else if (winstate == "Win")
-                money += bet * 2;
+            {
+                //money += bet * 2;
+                UpdateMoney(bet * 2);
+                labelDisplay.Text = winstate + " 2x bet won";
+            }
             else if (winstate == "Blackjack")
-                money += bet * 2.5;
+            {
+                //money += bet * 2.5;
+                UpdateMoney(bet * 2.5);
+                labelDisplay.Text = winstate + " 2.5x bet won";
+            } 
+            else
+                labelDisplay.Text = winstate + " Bet lost";
 
-            DisableControls();
-            UpdateMoney();
-        }
-        
-        private void DisableControls()
-        {
             buttonHit.Enabled = false;
             buttonStand.Enabled = false;
             buttonRestart.Enabled = true;
         }
 
+        /// <summary>
+        /// Locks in the players bet and then does the initial 2 draws for the player and initial 1 draw for the dealer.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonConfirmBet_Click(object sender, EventArgs e)
         {
             try
             {
                 bet = double.Parse(textBoxBet.Text);
                 if (bet > money)
-                {
                     MessageBox.Show("You cannot bet more money than you have");
-                }
+                else if (bet < 1)
+                    MessageBox.Show("Bet cannot be less than 1");
                 else
                 {
-                    money -= bet;
-                    UpdateMoney();
+                    //money -= bet;
+                    UpdateMoney(bet * -1);
                     buttonConfirmBet.Enabled = false;
                     textBoxBet.Enabled = false;
                     buttonHit.Enabled = true;
@@ -236,9 +279,15 @@ namespace cards
             }
         }
 
-        private void UpdateMoney()
+        /// <summary>
+        /// Updates the players money and the label displaying the players current money
+        /// </summary>
+        /// <param name="updateAmount">The amount to modify the money count by. Can be negative or positive</param>
+        private void UpdateMoney(double updateAmount)
         {
+            money += updateAmount;
             labelMoney.Text = "Money: $" + money;
+            labelDisplay.Text = "Press Hit to draw a card or Stand to end your turn";
         }
     }
 }

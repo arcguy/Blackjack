@@ -45,7 +45,7 @@
             // 
             // buttonHit
             // 
-            this.buttonHit.Location = new System.Drawing.Point(10, 207);
+            this.buttonHit.Location = new System.Drawing.Point(10, 210);
             this.buttonHit.Name = "buttonHit";
             this.buttonHit.Size = new System.Drawing.Size(100, 25);
             this.buttonHit.TabIndex = 0;
@@ -55,7 +55,7 @@
             // 
             // buttonStand
             // 
-            this.buttonStand.Location = new System.Drawing.Point(116, 207);
+            this.buttonStand.Location = new System.Drawing.Point(116, 210);
             this.buttonStand.Name = "buttonStand";
             this.buttonStand.Size = new System.Drawing.Size(100, 25);
             this.buttonStand.TabIndex = 1;
@@ -65,7 +65,7 @@
             // 
             // buttonRestart
             // 
-            this.buttonRestart.Location = new System.Drawing.Point(222, 207);
+            this.buttonRestart.Location = new System.Drawing.Point(222, 210);
             this.buttonRestart.Name = "buttonRestart";
             this.buttonRestart.Size = new System.Drawing.Size(100, 25);
             this.buttonRestart.TabIndex = 2;
@@ -95,11 +95,10 @@
             // 
             // labelDisplay
             // 
-            this.labelDisplay.AutoSize = true;
             this.labelDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDisplay.Location = new System.Drawing.Point(328, 139);
+            this.labelDisplay.Location = new System.Drawing.Point(331, 139);
             this.labelDisplay.Name = "labelDisplay";
-            this.labelDisplay.Size = new System.Drawing.Size(57, 20);
+            this.labelDisplay.Size = new System.Drawing.Size(192, 96);
             this.labelDisplay.TabIndex = 5;
             this.labelDisplay.Text = "display";
             // 
@@ -174,7 +173,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(535, 247);
+            this.ClientSize = new System.Drawing.Size(535, 256);
             this.Controls.Add(this.labelRound);
             this.Controls.Add(this.buttonConfirmBet);
             this.Controls.Add(this.textBoxBet);
