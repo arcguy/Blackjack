@@ -11,6 +11,14 @@ using System.Threading;
 using MetroFramework;
 using MetroFramework.Forms;
 
+/// <summary>
+/// TODO
+/// implement rounds
+/// scoreboard
+/// loss when out of $$$
+/// testing
+/// </summary>
+
 namespace cards
 {
     public partial class FormBlackjack : MetroForm
@@ -54,7 +62,7 @@ namespace cards
         /// <summary>
         /// enables and disables specific buttons for the start of the round. Resets the deck and scores, updates displays.
         /// </summary>
-        private void Initialize()
+        public void Initialize()
         {
             if (round <= 10)
             {
@@ -97,7 +105,7 @@ namespace cards
         /// </summary>
         /// <param name="user">Who is drawing cards</param>
         /// <param name="draws">How many cards to draw</param>
-        private void Draw(string user, int draws)
+        public void Draw(string user, int draws)
         {
             for (int i = 0; i < draws; i++)
             {
@@ -141,7 +149,7 @@ namespace cards
         /// <summary>
         /// Checks if the player has blackjack and then either wins, loses or draws with the dealer. Money is updated based on win state.
         /// </summary>
-        private void CheckWin()
+        public void CheckWin()
         {
             string winstate = "";
             if (playerScore == 21)
@@ -208,7 +216,7 @@ namespace cards
         /// Updates the players money and the label displaying the players current money
         /// </summary>
         /// <param name="updateAmount">The amount to modify the money count by. Can be negative or positive</param>
-        private void UpdateMoney(double updateAmount)
+        public void UpdateMoney(double updateAmount)
         {
             money += updateAmount;
             metroLabelMoney.Text = "Money: $" + money;

@@ -6,17 +6,26 @@ using System.Threading.Tasks;
 
 namespace cards
 {
-    class Card
+    public class Card
     {
         private string suit;
         private string value;
         private int num;
 
+        /// <summary>
+        /// Creates a new card object
+        /// </summary>
+        /// <param name="s">The suit of the card</param>
+        /// <param name="v">The raw value of the card such as ace, one, king, etc</param>
+        /// <param name="n">The value used to calculate score</param>
         public Card(string s, string v, int n)
         {
-            suit = s;
-            value = v;
-            num = n;
+            this.suit = s;
+            this.value = v;
+            if (n > 10)
+                this.num = 10;
+            else
+                this.num = n;
         }
 
         public string GetSuit()
@@ -44,10 +53,17 @@ namespace cards
 
         public int GetBlackjackValue(int score)
         {
-            int temp = 11;
-            if (score > 10)
-                temp = 1;
-            return temp;
+            //int temp = 11;
+            //if (score > 10)
+            //    temp = 1;
+            //return temp;
+            if (this.num == 1)
+                if (score > 10)
+                    return 1;
+                else
+                    return 11;
+            else 
+                return this.num;
         }
     }
 }
