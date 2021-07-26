@@ -53,10 +53,6 @@ namespace cards
 
         public int GetBlackjackValue(int score)
         {
-            //int temp = 11;
-            //if (score > 10)
-            //    temp = 1;
-            //return temp;
             if (this.num == 1)
                 if (score > 10)
                     return 1;

@@ -17,6 +17,7 @@ namespace cards
         public Scoreboard(double score)
         {
             InitializeComponent();
+            MetroMessageBox.Show(this, "You lost");
         }
     }
 }

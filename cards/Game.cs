@@ -32,6 +32,8 @@ namespace cards
         double bet = 0;
         int round = 0;
 
+        Player player1 = new Player(100);
+
         public FormBlackjack()
         {
             InitializeComponent();
@@ -151,7 +153,7 @@ namespace cards
         /// </summary>
         public void CheckWin()
         {
-            string winstate = "";
+            string winstate;
             if (playerScore == 21)
             {
                 if (dealerScore > 21)
@@ -184,19 +186,16 @@ namespace cards
 
             if (winstate == "Draw")
             {
-                //money += bet;
                 UpdateMoney(bet);
                 metroLabelDisplay.Text = winstate + ". Bet refunded";
             }
             else if (winstate == "Win")
             {
-                //money += bet * 2;
                 UpdateMoney(bet * 2);
                 metroLabelDisplay.Text = winstate + ". 2x bet won";
             }
             else if (winstate == "Blackjack")
             {
-                //money += bet * 2.5;
                 UpdateMoney(bet * 2.5);
                 metroLabelDisplay.Text = winstate + ". 2.5x bet won";
             } 
@@ -206,9 +205,12 @@ namespace cards
             metroButtonHit.Enabled = false;
             metroButtonStand.Enabled = false;
             metroButtonRestart.Enabled = true;
+
             if (money < 1)
             {
-
+                Scoreboard sb = new Scoreboard(money);
+                this.Close();
+                sb.Show();
             }
         }
 
