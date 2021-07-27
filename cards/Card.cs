@@ -43,13 +43,13 @@ namespace cards
             return value + " of " + suit;
         }
 
-        public int GetBlackjackValue()
-        {
-            int temp = this.num;
-            if (temp > 10)
-                temp = 10;
-            return temp;
-        }
+        //public int GetBlackjackValue()
+        //{
+        //    int temp = this.num;
+        //    if (temp > 10)
+        //        temp = 10;
+        //    return temp;
+        //}
 
         public int GetBlackjackValue(int score)
         {

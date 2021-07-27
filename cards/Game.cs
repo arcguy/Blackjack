@@ -32,15 +32,18 @@ namespace cards
         double bet = 0;
         int round = 0;
 
-        Player player1 = new Player(100);
+        Player player1;
+        Player dealer;
 
         public FormBlackjack()
         {
             InitializeComponent();
+            player1 = new Player("Player", metroLabelPlayerScore, metroListViewPlayer, metroLabelMoney);
+            dealer = new Player("Dealer", metroLabelDealerScore, metroListViewDealer);
 
             for (int i = 1; i < 14; i++)
             {
-                string value = "";
+                string value;
                 if (i == 1)
                     value = "Ace";
                 else if (i == 11)
@@ -58,7 +61,7 @@ namespace cards
             }
 
             Initialize();
-            metroLabelMoney.Text = "Money: $" + money.ToString();
+            metroLabelMoney.Text = "Money: $" + player1.GetMoney().ToString();
         }
 
         /// <summary>
@@ -75,24 +78,29 @@ namespace cards
                 metroButtonConfirmBet.Enabled = true;
                 metroTextBoxBet.Enabled = true;
                 //clear the listboxes and reset labels and scores
-                playerScore = 0;
-                dealerScore = 0;
+                //playerScore = 0;
+                //dealerScore = 0;
 
-                metroListViewDealer.Clear();
-                metroListViewDealer.Columns.Add("Dealer");
+                //metroListViewDealer.Clear();
+                //metroListViewDealer.Columns.Add("Dealer");
 
-                metroListViewPlayer.Clear();
-                metroListViewPlayer.Columns.Add("Player");
-                metroLabelDealerScore.ResetText();
-                metroLabelPlayerScore.ResetText();
+                //metroListViewPlayer.Clear();
+                //metroListViewPlayer.Columns.Add("Player");
+                //metroLabelDealerScore.ResetText();
+                //metroLabelPlayerScore.ResetText();
                 metroLabelDisplay.Text = "Confirm bet to continue";
-                bet = 0;
+                //bet = 0;
+                player1.Reset();
+                dealer.Reset();
                 round++;
 
                 //create the deck
                 Deck.Clear();
                 Deck.AddRange(mainDeck);
                 metroLabelRound.Text = "Round " + round;
+
+                metroTextBoxBet.Clear();
+                metroTextBoxBet.Focus();
             }
             else
             {
@@ -107,44 +115,48 @@ namespace cards
         /// </summary>
         /// <param name="user">Who is drawing cards</param>
         /// <param name="draws">How many cards to draw</param>
-        public void Draw(string user, int draws)
+        public void Draw(Player user, int draws)
         {
             for (int i = 0; i < draws; i++)
             {
-                if (user == "player")
-                {
-                    Card draw = Deck[r.Next(Deck.Count)];
-                    if (draw.GetValue() == "Ace")
-                        playerScore += draw.GetBlackjackValue(playerScore);
-                    else
-                        playerScore += draw.GetBlackjackValue();
+                //if (user == "player")
+                //{
+                //    Card draw = Deck[r.Next(Deck.Count)];
+                //    if (draw.GetValue() == "Ace")
+                //        playerScore += draw.GetBlackjackValue(playerScore);
+                //    else
+                //        playerScore += draw.GetBlackjackValue();
 
-                    metroListViewPlayer.BeginUpdate();
-                    metroListViewPlayer.View = View.Details;
-                    metroListViewPlayer.Items.Add(draw.ToString());
-                    metroListViewPlayer.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);                    
-                    metroListViewPlayer.EndUpdate();
+                //    metroListViewPlayer.BeginUpdate();
+                //    metroListViewPlayer.View = View.Details;
+                //    metroListViewPlayer.Items.Add(draw.ToString());
+                //    metroListViewPlayer.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);                    
+                //    metroListViewPlayer.EndUpdate();
 
-                    Deck.Remove(draw);
-                    metroLabelPlayerScore.Text = "Player Score: " + playerScore;
-                }
-                else
-                {
-                    Card draw = Deck[r.Next(Deck.Count)];
-                    if (draw.GetValue() == "Ace")
-                        dealerScore += draw.GetBlackjackValue(playerScore);
-                    else
-                        dealerScore += draw.GetBlackjackValue();
+                //    Deck.Remove(draw);
+                //    metroLabelPlayerScore.Text = "Player Score: " + playerScore;
+                //}
+                //else
+                //{
+                //    Card draw = Deck[r.Next(Deck.Count)];
+                //    if (draw.GetValue() == "Ace")
+                //        dealerScore += draw.GetBlackjackValue(playerScore);
+                //    else
+                //        dealerScore += draw.GetBlackjackValue();
 
-                    metroListViewDealer.BeginUpdate();
-                    metroListViewDealer.View = View.Details;
-                    metroListViewDealer.Items.Add(draw.ToString());
-                    metroListViewDealer.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-                    metroListViewDealer.EndUpdate();
+                //    metroListViewDealer.BeginUpdate();
+                //    metroListViewDealer.View = View.Details;
+                //    metroListViewDealer.Items.Add(draw.ToString());
+                //    metroListViewDealer.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+                //    metroListViewDealer.EndUpdate();
 
-                    Deck.Remove(draw);
-                    metroLabelDealerScore.Text = "Dealer Score: " + dealerScore;
-                }
+                //    Deck.Remove(draw);
+                //    metroLabelDealerScore.Text = "Dealer Score: " + dealerScore;
+                //}
+                Card draw = Deck[r.Next(Deck.Count)];
+                user.AddToDrawnCards(draw);
+                user.UpdateScore(draw.GetBlackjackValue(user.GetScore()));
+                Deck.Remove(draw);
             }          
         }
 
@@ -154,26 +166,26 @@ namespace cards
         public void CheckWin()
         {
             string winstate;
-            if (playerScore == 21)
+            if (player1.GetScore() == 21)
             {
-                if (dealerScore > 21)
+                if (dealer.GetScore() > 21)
                 {
                     winstate = "Blackjack";
                 }
-                else if (dealerScore == 21)
+                else if (dealer.GetScore() == 21)
                     winstate = "Draw";
                 else
                     winstate = "Blackjack";
             }
-            else if (playerScore < 21)
+            else if (player1.GetScore() < 21)
             {
-                if (dealerScore <= 21)
+                if (dealer.GetScore() <= 21)
                 {
-                    if (playerScore > dealerScore)
+                    if (player1.GetScore() > dealer.GetScore())
                     {
                         winstate = "Win";
                     }
-                    else if (playerScore == dealerScore)
+                    else if (player1.GetScore() == dealer.GetScore())
                         winstate = "Draw";
                     else
                         winstate = "Bust";
@@ -186,17 +198,20 @@ namespace cards
 
             if (winstate == "Draw")
             {
-                UpdateMoney(bet);
+                //UpdateMoney(bet);
+                player1.UpdateMoney(player1.GetBet());
                 metroLabelDisplay.Text = winstate + ". Bet refunded";
             }
             else if (winstate == "Win")
             {
-                UpdateMoney(bet * 2);
+                //UpdateMoney(bet * 2);
+                player1.UpdateMoney(player1.GetBet() * 2);
                 metroLabelDisplay.Text = winstate + ". 2x bet won";
             }
             else if (winstate == "Blackjack")
             {
-                UpdateMoney(bet * 2.5);
+                //UpdateMoney(bet * 2.5);
+                player1.UpdateMoney(player1.GetBet() * 2.5);
                 metroLabelDisplay.Text = winstate + ". 2.5x bet won";
             } 
             else
@@ -206,7 +221,9 @@ namespace cards
             metroButtonStand.Enabled = false;
             metroButtonRestart.Enabled = true;
 
-            if (money < 1)
+            //metroLabelMoney.Text = "Money: $" + player1.GetMoney().ToString();
+
+            if (player1.GetMoney() < 1)
             {
                 Scoreboard sb = new Scoreboard(money);
                 this.Close();
@@ -232,14 +249,14 @@ namespace cards
         /// <param name="e"></param>
         private void metroButtonHit_Click(object sender, EventArgs e)
         {
-            Draw("player", 1);
+            Draw(player1, 1);
             //Thread.Sleep(150);
-            if (playerScore >= 21)
+            if (player1.GetScore() >= 21)
             {
                 metroLabelDisplay.Text = "Bust. Bet lost";
-                while (dealerScore < 17)
+                while (dealer.GetScore() < 17)
                 {
-                    Draw("dealer", 1);
+                    Draw(dealer, 1);
                     metroLabelDealerScore.Update();
                     Thread.Sleep(r.Next(150, 500));
                 }
@@ -254,11 +271,11 @@ namespace cards
         /// <param name="e"></param>
         private void metroButtonStand_Click(object sender, EventArgs e)
         {
-            Draw("dealer", 1);
+            Draw(dealer, 1);
 
-            while (dealerScore < 17)
+            while (dealer.GetScore() < 17)
             {
-                Draw("dealer", 1);                
+                Draw(dealer, 1);                
                 metroLabelDealerScore.Update();
                 Thread.Sleep(r.Next(150, 500));
             }
@@ -284,22 +301,24 @@ namespace cards
         {
             try
             {
-                bet = double.Parse(metroTextBoxBet.Text);
-                if (bet > money)
+                player1.SetBet(double.Parse(metroTextBoxBet.Text));
+                if (player1.GetBet() > money)
                     MessageBox.Show("You cannot bet more money than you have");
-                else if (bet < 1)
+                else if (player1.GetBet() < 1)
                     MessageBox.Show("Bet cannot be less than 1");
                 else
                 {
-                    UpdateMoney(bet * -1);
+                    //UpdateMoney(bet * -1);
+                    player1.UpdateMoney(-player1.GetBet());
+                    //metroLabelMoney.Text = "Money: $" + player1.GetMoney().ToString();
                     metroButtonConfirmBet.Enabled = false;
                     metroTextBoxBet.Enabled = false;
                     metroButtonHit.Enabled = true;
                     metroButtonStand.Enabled = true;
                     //Initial draw
-                    Draw("player", 2);
-                    Draw("dealer", 1);
-                    if (playerScore >= 21)
+                    Draw(player1, 2);
+                    Draw(dealer, 1);
+                    if (player1.GetScore() >= 21)
                         CheckWin();
                 }
             }
