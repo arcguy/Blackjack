@@ -26,6 +26,7 @@ namespace BlackjackTesting
             Card jack = new Card("Diamonds", "Jack", 11);
             Card queen = new Card("Hearts", "Queen", 12);
             Card king = new Card("Spades", "King", 13);
+            Card error = new Card("kjhf", "gfdkj", 20);
 
             Assert.AreEqual(11, ace.GetBlackjackValue(5));
             Assert.AreEqual(1, ace.GetBlackjackValue(12));
@@ -41,6 +42,39 @@ namespace BlackjackTesting
             Assert.AreEqual(10, jack.GetBlackjackValue(10));
             Assert.AreEqual(10, queen.GetBlackjackValue(10));
             Assert.AreEqual(10, king.GetBlackjackValue(10));
+            Assert.AreEqual(10, error.GetBlackjackValue(10));
+        }
+
+        /// <summary>
+        /// Testing UpdateMoney and GetMoney methods from the player class
+        /// </summary>
+        [TestMethod]
+        public void PlayerMoneyTesting()
+        {
+            Player p = new Player("Test");
+            Assert.AreEqual(100, p.GetMoney());
+
+            p.UpdateMoney(-20);
+            Assert.AreEqual(80, p.GetMoney());
+
+            p.UpdateMoney(1000);
+            Assert.AreEqual(1080, p.GetMoney());
+        }
+
+        [TestMethod]
+        public void PlayerScoreTesting()
+        {
+            Player p = new Player("Test");
+            Assert.AreEqual(0, p.GetScore());
+
+            p.UpdateScore(5);
+            Assert.AreEqual(5, p.GetScore());
+
+            p.UpdateScore(16);
+            Assert.AreEqual(21, p.GetScore());
+
+            p.UpdateScore(-10);
+            Assert.AreEqual(11, p.GetScore());
         }
     }
 }

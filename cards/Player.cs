@@ -11,43 +11,43 @@ namespace cards
 {
     public class Player
     {
+        string name;
         double money;
         double bet;
         int score;
         List<Card> drawnCards = new List<Card>();
-        MetroLabel scoreLabel;
-        MetroLabel moneyLabel;
-        MetroListView displayBox;
-        string name;
+        //MetroLabel scoreLabel;
+        //MetroLabel moneyLabel;
+        //MetroListView displayBox;        
 
-        public Player(string n, MetroLabel dl, MetroListView mlv) 
+        public Player(string n)//(string n, MetroLabel dl, MetroListView mlv) 
         {
             this.name = n;
-            this.scoreLabel = dl;
-            this.displayBox = mlv;
+            //this.scoreLabel = dl;
+            //this.displayBox = mlv;
             this.money = 100;
             this.bet = 0;
         }
 
-        public Player(string n, MetroLabel dl, MetroListView mlv, MetroLabel ml)
-        {
-            this.name = n;
-            this.scoreLabel = dl;
-            this.displayBox = mlv;
-            this.moneyLabel = ml;
-            this.money = 100;
-            this.bet = 0;
-        }
+        //public Player()//(string n, MetroLabel dl, MetroListView mlv, MetroLabel ml)
+        //{
+        //    this.name = n;
+        //    //this.scoreLabel = dl;
+        //    //this.displayBox = mlv;
+        //    //this.moneyLabel = ml;
+        //    this.money = 100;
+        //    this.bet = 0;
+        //}
 
         public double GetMoney()
         {
-            return this.money;
+            return this.money;      
         }
 
         public void UpdateMoney(double changeAmount)
         {
             this.money += changeAmount;
-            moneyLabel.Text = "Money: $" + this.money.ToString();
+            //moneyLabel.Text = "Money: $" + this.money.ToString();
         }
 
         public int GetScore()
@@ -58,7 +58,7 @@ namespace cards
         public void UpdateScore(int updateAmount)
         {
             this.score += updateAmount;
-            UpdateScoreDisplay();
+            //UpdateScoreDisplay();
         }
 
         public void AddToDrawnCards(Card c)
@@ -81,7 +81,7 @@ namespace cards
             return this.bet;
         }
 
-        private void UpdateScoreDisplay()
+        public void UpdateScoreDisplay(MetroLabel scoreLabel, MetroListView displayBox)
         {
             displayBox.BeginUpdate();
             displayBox.Clear();
@@ -94,13 +94,23 @@ namespace cards
             scoreLabel.Text = this.name + " Score: " + this.score;
         }
 
-        public void Reset()
+        public void Reset(MetroLabel scoreLabel, MetroListView displayBox)
         {
             this.bet = 0;
             this.score = 0;
             scoreLabel.Text = "Score: 0";
             drawnCards.Clear();
             displayBox.Clear();
+        }
+
+        public string GetName()
+        {
+            return this.name;
+        }
+
+        public void UpdateMoneyDisplay(MetroLabel moneyLabel)
+        {
+            moneyLabel.Text = "Money: $" + this.GetMoney().ToString();
         }
     }
 }
