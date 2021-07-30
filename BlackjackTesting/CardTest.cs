@@ -61,6 +61,9 @@ namespace BlackjackTesting
             Assert.AreEqual(1080, p.GetMoney());
         }
 
+        /// <summary>
+        /// Testing UpdateScore and GetScore methods from the player class and also the score resetting part of the Reset method.
+        /// </summary>
         [TestMethod]
         public void PlayerScoreTesting()
         {
@@ -75,6 +78,9 @@ namespace BlackjackTesting
 
             p.UpdateScore(-10);
             Assert.AreEqual(11, p.GetScore());
+
+            p.Reset();
+            Assert.AreEqual(0, p.GetScore());
         }
     }
 }

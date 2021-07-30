@@ -94,13 +94,18 @@ namespace cards
             scoreLabel.Text = this.name + " Score: " + this.score;
         }
 
-        public void Reset(MetroLabel scoreLabel, MetroListView displayBox)
+        public void ResetDisplay(MetroLabel scoreLabel, MetroListView displayBox)
         {
-            this.bet = 0;
-            this.score = 0;
+            
             scoreLabel.Text = "Score: 0";
             drawnCards.Clear();
             displayBox.Clear();
+        }
+
+        public void Reset()
+        {
+            this.bet = 0;
+            this.score = 0;
         }
 
         public string GetName()
