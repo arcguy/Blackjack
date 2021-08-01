@@ -14,6 +14,7 @@ namespace cards
 {
     public partial class Scoreboard : MetroForm
     {
+
         public Scoreboard(double score)
         {
             InitializeComponent();

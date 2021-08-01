@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using cards;
+using MetroFramework;
+using MetroFramework.Controls;
 
 namespace BlackjackTesting
 {
@@ -46,19 +48,44 @@ namespace BlackjackTesting
         }
 
         /// <summary>
-        /// Testing UpdateMoney and GetMoney methods from the player class
+        /// Testing UpdateMoney and GetMoney methods from the player class and also making sure the 
         /// </summary>
         [TestMethod]
         public void PlayerMoneyTesting()
         {
-            Player p = new Player("Test");
-            Assert.AreEqual(100, p.GetMoney());
+            Player p1 = new Player("Test");
 
-            p.UpdateMoney(-20);
-            Assert.AreEqual(80, p.GetMoney());
+            Assert.AreEqual(100, p1.GetMoney());
 
-            p.UpdateMoney(1000);
-            Assert.AreEqual(1080, p.GetMoney());
+            p1.UpdateMoney(-20);
+            Assert.AreEqual(80, p1.GetMoney());
+
+            p1.UpdateMoney(1000);
+            Assert.AreEqual(1080, p1.GetMoney());
+        }
+
+        /// <summary>
+        /// Tests to make sure the correct amounts of money are paid out by the ProcessOutcome() method from the Game class
+        /// </summary>
+        [TestMethod]
+        public void BetTesting()
+        {
+            Player p1 = new Player("Test");
+            MetroLabel l = new MetroLabel();
+            MetroButton b = new MetroButton();
+            MetroTextBox t = new MetroTextBox();
+            MetroListView ls = new MetroListView();
+            Game gc = new Game(l, b, b, b, b, t, l, l, ls, ls, l, l);
+
+            p1.SetBet(10);
+            gc.ProcessOutcome("Blackjack", p1);
+            Assert.AreEqual(125, p1.GetMoney());
+
+            gc.ProcessOutcome("Win", p1);
+            Assert.AreEqual(145, p1.GetMoney());
+
+            gc.ProcessOutcome("Draw", p1);
+            Assert.AreEqual(155, p1.GetMoney());
         }
 
         /// <summary>
@@ -81,6 +108,49 @@ namespace BlackjackTesting
 
             p.Reset();
             Assert.AreEqual(0, p.GetScore());
+        }
+
+        /// <summary>
+        /// Testing the checkwin method in the Game class
+        /// </summary>
+        [TestMethod]
+        public void CheckwinTesting()
+        {
+            MetroLabel l = new MetroLabel();
+            MetroButton b = new MetroButton();
+            MetroTextBox t = new MetroTextBox();
+            MetroListView ls = new MetroListView();
+
+            Player p1 = new Player("Test");
+            Player dealer = new Player("Dealer");
+            Game gc = new Game(l, b, b, b, b, t, l, l, ls, ls, l, l);
+
+            //p1 score: 21, dealer score: 22
+            p1.UpdateScore(21);
+            dealer.UpdateScore(22);
+            Assert.AreEqual(gc.CheckWin(p1, dealer), "Blackjack");
+
+            //p1 score: 21, dealer score: 21
+            dealer.UpdateScore(-1);
+            Assert.AreEqual(gc.CheckWin(p1, dealer), "Blackjack");
+
+            //p1 score: 20, dealer score: 22
+            p1.UpdateScore(-1);
+            dealer.UpdateScore(1);
+            Assert.AreEqual(gc.CheckWin(p1, dealer), "Win");
+
+            //p1 score: 20, dealer score: 20
+            dealer.UpdateScore(-2);
+            Assert.AreEqual(gc.CheckWin(p1, dealer), "Draw");
+
+            //p1 score: 22, dealer score: 20
+            p1.UpdateScore(2);
+            Assert.AreEqual(gc.CheckWin(p1, dealer), "Bust");
+
+            //p1 score: 19, dealer score: 18
+            p1.UpdateScore(-3);
+            dealer.UpdateScore(-4);
+            Assert.AreEqual(gc.CheckWin(p1, dealer), "Win");
         }
     }
 }

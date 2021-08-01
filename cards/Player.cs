@@ -15,29 +15,14 @@ namespace cards
         double money;
         double bet;
         int score;
-        List<Card> drawnCards = new List<Card>();
-        //MetroLabel scoreLabel;
-        //MetroLabel moneyLabel;
-        //MetroListView displayBox;        
+        List<Card> drawnCards = new List<Card>();      
 
-        public Player(string n)//(string n, MetroLabel dl, MetroListView mlv) 
+        public Player(string n) 
         {
             this.name = n;
-            //this.scoreLabel = dl;
-            //this.displayBox = mlv;
             this.money = 100;
             this.bet = 0;
         }
-
-        //public Player()//(string n, MetroLabel dl, MetroListView mlv, MetroLabel ml)
-        //{
-        //    this.name = n;
-        //    //this.scoreLabel = dl;
-        //    //this.displayBox = mlv;
-        //    //this.moneyLabel = ml;
-        //    this.money = 100;
-        //    this.bet = 0;
-        //}
 
         public double GetMoney()
         {
@@ -47,7 +32,6 @@ namespace cards
         public void UpdateMoney(double changeAmount)
         {
             this.money += changeAmount;
-            //moneyLabel.Text = "Money: $" + this.money.ToString();
         }
 
         public int GetScore()
@@ -58,7 +42,6 @@ namespace cards
         public void UpdateScore(int updateAmount)
         {
             this.score += updateAmount;
-            //UpdateScoreDisplay();
         }
 
         public void AddToDrawnCards(Card c)

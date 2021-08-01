@@ -8,9 +8,8 @@ using MetroFramework.Controls;
 
 namespace cards
 {
-    class Game
+    public class Game
     {
-        //Player p1, dealer;
         MetroLabel playerScore, playerMoney, dealerScore, displayLabel ,roundLabel;
         MetroListView playerDisplay, dealerDisplay;
         MetroButton hitButton, standButton, nextButton, betButton;
@@ -21,10 +20,8 @@ namespace cards
         Random r = new Random();
         int round;
 
-        public Game(Player player1, Player dealer1, MetroLabel d, MetroButton hit, MetroButton stand, MetroButton next, MetroButton bet, MetroTextBox betInput, MetroLabel pScore, MetroLabel dScore, MetroListView pDisplay, MetroListView dDisplay, MetroLabel rLabel, MetroLabel mLabel)
+        public Game(MetroLabel d, MetroButton hit, MetroButton stand, MetroButton next, MetroButton bet, MetroTextBox betInput, MetroLabel pScore, MetroLabel dScore, MetroListView pDisplay, MetroListView dDisplay, MetroLabel rLabel, MetroLabel mLabel)
         {
-            //p1 = player1;
-            //dealer = dealer1;
             displayLabel = d;
             hitButton = hit;
             standButton = stand;
@@ -70,7 +67,7 @@ namespace cards
         /// </summary>
         public void ResetGameState(Player p1, Player dealer)
         {
-            if (round <= 10)
+            if (round < 10)
             {
                 hitButton.Enabled = false;
                 standButton.Enabled = false;
@@ -116,14 +113,13 @@ namespace cards
                 user.AddToDrawnCards(c);
                 user.UpdateScore(c.GetBlackjackValue(user.GetScore()));
                 Deck.Remove(c);
-                //Update score display somewhere else
             }
         }
 
         /// <summary>
         /// Checks if the player has blackjack, a win, a draw or a loss.
         /// </summary>
-        public void CheckWin(Player user, Player dealer)
+        public string CheckWin(Player user, Player dealer)
         {
             string winstate = "Bust";
             if (user.GetScore() == 21)
@@ -145,9 +141,12 @@ namespace cards
                 else
                     winstate = "Win";
             }
-            //else
-            //    winstate = "Bust";
+            return winstate;
+                       
+        }
 
+        public void ProcessOutcome(string winstate, Player user)
+        {
             if (winstate == "Blackjack")
             {
                 user.UpdateMoney(user.GetBet() * 2.5);
@@ -168,7 +167,7 @@ namespace cards
 
             hitButton.Enabled = false;
             standButton.Enabled = false;
-            nextButton.Enabled = true;            
+            nextButton.Enabled = true; 
         }
 
         /// <summary>
@@ -181,7 +180,7 @@ namespace cards
             if (user.GetScore() >= 21)
             {
                 DrawDealer(dealer);
-                CheckWin(user, dealer);
+                ProcessOutcome(CheckWin(user, dealer), user);
             }            
             
         }
@@ -202,7 +201,7 @@ namespace cards
         public void Stand(Player user, Player dealer)
         {
             DrawDealer(dealer);
-            CheckWin(user, dealer);
+            ProcessOutcome(CheckWin(user, dealer), user);
         }
 
         public void ConfirmBet(Player user, Player dealer, System.Windows.Forms.IWin32Window window)
@@ -221,14 +220,13 @@ namespace cards
                 hitButton.Enabled = true;
                 standButton.Enabled = true;
 
-                //initial draws for player and dealer
-                Draw(user, 2);
-                user.UpdateScoreDisplay(playerScore, playerDisplay);
-                Draw(dealer, 1);
-                dealer.UpdateScoreDisplay(dealerScore, dealerDisplay);
+                displayLabel.Text = "Press Hit to draw a card or Stand to end your turn";
 
-                if (user.GetScore() >= 21)
-                    CheckWin(user, dealer);
+                //initial draws for player and dealer
+                Draw(user, 2);                
+                Draw(dealer, 1);
+                user.UpdateScoreDisplay(playerScore, playerDisplay);
+                dealer.UpdateScoreDisplay(dealerScore, dealerDisplay);
             }
         }
     }
